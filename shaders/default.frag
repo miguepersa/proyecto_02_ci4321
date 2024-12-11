@@ -20,6 +20,9 @@ uniform vec4 lightColor;
 // Gets the position of the light from the main function
 uniform vec3 lightPos;
 
+uniform vec3 spotLightDir;
+uniform vec3 spotLightPos;
+
 uniform vec3 camPos;
 
 vec4 pointLight() 
@@ -67,9 +70,37 @@ vec4 directLight()
 	return (texture(diffuse0, texCoord) * (diffuse + ambient + specular) ) * lightColor;
 }
 
+vec4 spotLight() 
+{
+	// controls how big the area that is lit up is
+	float outerCone = 0.90f;
+	float innerCone = 0.95f;
+
+	// used in two variables so I calculate it here to not have to do it twice
+	vec3 lightVec = spotLightPos - currentPos;
+
+	// intensity of light with respect to distance
+	//float dist = length(lightVec);
+	//float a = 0.005;
+	//float b = 0.001;
+	//float inten = 1.0f / (a * dist * dist + b * dist + 1.0f);
+	//float inten = 1.0f;
+	float ambient = 0.20f;
+
+	// diffuse lighting
+	vec3 normal = normalize(Normal);
+	vec3 lightDirection = normalize(lightVec);
+	float diffuse = max(dot(normal, lightDirection), 0.0f);
+
+	float angle = dot(spotLightDir, -lightDirection);
+	float inten = clamp((angle - outerCone) / (innerCone - outerCone), 0.0f, 1.0f);
+
+	return (texture(diffuse0, texCoord) * (diffuse * inten + ambient) ) * lightColor;
+}
+
 void main()
 {
 
 	// outputs final color
-	FragColor = pointLight();
+	FragColor = spotLight() + pointLight();
 }

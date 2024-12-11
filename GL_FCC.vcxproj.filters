@@ -60,6 +60,9 @@
     <ClCompile Include="Obstacle.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="Tank.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -95,6 +98,9 @@
     <ClInclude Include="Obstacle.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="Tank.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\skybox\back.jpg">
@@ -127,6 +133,9 @@
     <Image Include="textures\tank.jpg">
       <Filter>Archivos de recursos\Textures</Filter>
     </Image>
+    <Image Include="textures\gonna_kms.jpeg">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\default.frag">
@@ -147,5 +156,9 @@
     <None Include="shaders\skybox.vert">
       <Filter>Archivos de recursos\Shaders</Filter>
     </None>
+    <None Include="overlay.frag" />
+    <None Include="overlay.vert" />
+    <None Include="shaders\text.frag" />
+    <None Include="shaders\text.vert" />
   </ItemGroup>
 </Project>

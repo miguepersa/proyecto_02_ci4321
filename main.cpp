@@ -287,23 +287,32 @@ int main() {
 	glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
 	glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 
+	glm::vec3 spotLightDir = tankObject.meshes[1].Orientation;
+	glm::vec3 spotLightPos = tankObject.meshes[1].Position;
+
 	shaderProgram.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(objModel));
 	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "position"), 0.0f, 0.0f, 0.0f );
+	glUniform3f(glGetUniformLocation(shaderProgram.ID, "spotLightDir"), spotLightDir.x, spotLightDir.y, spotLightDir.z);
+	glUniform3f(glGetUniformLocation(shaderProgram.ID, "spotLightPos"), spotLightPos.x, spotLightPos.y, spotLightPos.z);
 
 	tankShader.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(tankShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(objModel));
 	glUniform4f(glGetUniformLocation(tankShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(tankShader.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
-	glUniform3f(glGetUniformLocation(shaderProgram.ID, "position"), 0.0f, 0.0f, 0.0f);
+	glUniform3f(glGetUniformLocation(tankShader.ID, "position"), 0.0f, 0.0f, 0.0f);
+	glUniform3f(glGetUniformLocation(tankShader.ID, "spotLightDir"), spotLightDir.x, spotLightDir.y, spotLightDir.z);
+	glUniform3f(glGetUniformLocation(tankShader.ID, "spotLightPos"), spotLightPos.x, spotLightPos.y, spotLightPos.z);
 
 	turretShader.Activate();
-	glUniformMatrix4fv(glGetUniformLocation(tankShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(objModel));
-	glUniform4f(glGetUniformLocation(tankShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f(glGetUniformLocation(tankShader.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
-	glUniform3f(glGetUniformLocation(shaderProgram.ID, "position"), 0.0f, 0.0f, 0.0f);
+	glUniformMatrix4fv(glGetUniformLocation(turretShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(objModel));
+	glUniform4f(glGetUniformLocation(turretShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	glUniform3f(glGetUniformLocation(turretShader.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+	glUniform3f(glGetUniformLocation(turretShader.ID, "position"), 0.0f, 0.0f, 0.0f);
+	glUniform3f(glGetUniformLocation(turretShader.ID, "spotLightDir"), spotLightDir.x, spotLightDir.y, spotLightDir.z);
+	glUniform3f(glGetUniformLocation(turretShader.ID, "spotLightPos"), spotLightPos.x, spotLightPos.y, spotLightPos.z);
 
 	skyboxShader.Activate();
 	glUniform1i(glGetUniformLocation(skyboxShader.ID, "skybox"), 0);
@@ -421,9 +430,16 @@ int main() {
 
 			shaderProgram.Activate();
 			glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x + lightZPosition, lightPos.y, lightPos.z + lightZPosition);
+			glUniform3f(glGetUniformLocation(shaderProgram.ID, "spotLightDir"), spotLightDir.x, spotLightDir.y, spotLightDir.z);
+			glUniform3f(glGetUniformLocation(shaderProgram.ID, "spotLightPos"), spotLightPos.x, spotLightPos.y, spotLightPos.z);
+			tankShader.Activate();
 			glUniform3f(glGetUniformLocation(tankShader.ID, "lightPos"),	lightPos.x + lightZPosition, lightPos.y, lightPos.z + lightZPosition);
+			glUniform3f(glGetUniformLocation(tankShader.ID, "spotLightDir"), spotLightDir.x, spotLightDir.y, spotLightDir.z);
+			glUniform3f(glGetUniformLocation(tankShader.ID, "spotLightPos"), spotLightPos.x, spotLightPos.y, spotLightPos.z);
+			turretShader.Activate();
 			glUniform3f(glGetUniformLocation(turretShader.ID, "lightPos"),	lightPos.x + lightZPosition, lightPos.y, lightPos.z + lightZPosition);
-
+			glUniform3f(glGetUniformLocation(turretShader.ID, "spotLightDir"), spotLightDir.x, spotLightDir.y, spotLightDir.z);
+			glUniform3f(glGetUniformLocation(turretShader.ID, "spotLightPos"), spotLightPos.x, spotLightPos.y, spotLightPos.z);
 
 			lightShader.Activate();
 			glUniform1f(glGetUniformLocation(lightShader.ID, "lightMovement"), lightZPosition);
@@ -437,7 +453,8 @@ int main() {
 
 		// Manejo de input tanque
 		tankObject.HandleInput(window, camera.Orientation, (float)currentTime, windowWidth, windowHeight);
-
+		spotLightDir = tankObject.meshes[1].Orientation;
+		spotLightPos = tankObject.meshes[1].Position;
 		//camera.Inputs(window, (float) currentTime, tankObject.Position);
 		camera.followObject(tankObject.Position, tankObject.Orientation);
 		camera.updateMatrix(45.0f, 0.1f, 100.0f);
